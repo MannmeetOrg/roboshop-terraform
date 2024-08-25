@@ -1,0 +1,29 @@
+name: Provision Infrastructure
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push, workflow_dispatch]
+jobs:
+  Dev:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run a one-line script
+        run: echo Hello, world!
+  QA:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run a one-line script
+        run: echo Hello, world!
+  UAT:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+  Prod:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run a one-line script
+        run: echo Hello, world!
