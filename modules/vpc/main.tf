@@ -20,10 +20,10 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "web_subnet" {
-  count = length (var.web_subnet)
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = var.web_subnet.cidr[count.index]
-  availability_zones = var.availability_zones[count.index]
+  count                 = length(var.web_subnet)
+  vpc_id                = aws_vpc.vpc.id
+  cidr_block            = var.web_subnet[count.index]
+  availability_zone     = var.availability_zones[count.index]
 
   tags = {
     Name = "web-subnet-${split("-", var.availability_zones[count.index])[2]}"
@@ -130,26 +130,26 @@ resource "aws_route_table" "db-rt" {
 }
 
 ## Route Table Association
-resource "aws_main_route_table_association" "public" {
-  count           = length(var.public_subnet)
-  subnet_id       = aws_subnet.public_subnet.*.id
-  route_table_id  = aws_route_table.public-rt.*.id[count.index]
+resource "aws_route_table_association" "public" {
+  count          = length(var.public_subnet)
+  subnet_id      = aws_subnet.public_subnet.*.id[count.index]
+  route_table_id = aws_route_table.public-rt.*.id[count.index]
 }
 
-resource "aws_main_route_table_association" "web" {
-  count           = length(var.web_subnet)
-  subnet_id       = aws_subnet.web_subnet.*.id
-  route_table_id  = aws_route_table.web-rt.*.id[count.index]
+resource "aws_route_table_association" "web" {
+  count          = length(var.web_subnet)
+  subnet_id      = aws_subnet.web_subnet.*.id[count.index]
+  route_table_id = aws_route_table.web-rt.*.id[count.index]
 }
 
-resource "aws_main_route_table_association" "app" {
-  count           = length(var.app_subnet)
-  subnet_id       = aws_subnet.app_subnet.*.id
-  route_table_id  = aws_route_table.app-rt.*.id[count.index]
+resource "aws_route_table_association" "app" {
+  count          = length(var.app_subnet)
+  subnet_id      = aws_subnet.app_subnet.*.id[count.index]
+  route_table_id = aws_route_table.app-rt.*.id[count.index]
 }
 
-resource "aws_main_route_table_association" "db" {
-  count           = length(var.db_subnet)
-  subnet_id       = aws_subnet.db_subnet.*.id
-  route_table_id  = aws_route_table.db-rt.*.id[count.index]
+resource "aws_route_table_association" "db" {
+  count          = length(var.db_subnet)
+  subnet_id      = aws_subnet.db_subnet.*.id[count.index]
+  route_table_id = aws_route_table.db-rt.*.id[count.index]
 }
