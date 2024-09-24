@@ -61,10 +61,3 @@ resource "aws_route_table" "public-rt" {
   }
 }
 
-resource "aws_route_table" "web-rt" {
-  vpc_id = aws_vpc.vpc.id
-
-  tags = {
-    Name = "web-rt"
-  }
-}
