@@ -1,5 +1,5 @@
 ## VPC
-resource "aws_vpc" "vpc" {
+resource "aws_vpc" "main" {
   cidr_block       = var.cidr
 
   tags = {
@@ -10,7 +10,7 @@ resource "aws_vpc" "vpc" {
 ## SUBNETS
 resource "aws_subnet" "public_subnet" {
   count = length (var.public_subnet)
-  vpc_id     = aws_vpc.vpc.id
+  vpc_id     = aws_vpc.main.id
   cidr_block = var.public_subnet.cidr[count.index]
   availability_zone = var.availability_zones[count.index]
 
@@ -21,7 +21,7 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_subnet" "web_subnet" {
   count                 = length(var.web_subnet)
-  vpc_id                = aws_vpc.vpc.id
+  vpc_id                = aws_vpc.main.id
   cidr_block            = var.web_subnet[count.index]
   availability_zone     = var.availability_zones[count.index]
 
@@ -32,7 +32,7 @@ resource "aws_subnet" "web_subnet" {
 
 resource "aws_subnet" "app_subnet" {
   count = length (var.app_subnet)
-  vpc_id     = aws_vpc.vpc.id
+  vpc_id     = aws_vpc.main.id
   cidr_block = var.app_subnet.cidr[count.index]
   availability_zone = var.availability_zones[count.index]
 
@@ -43,7 +43,7 @@ resource "aws_subnet" "app_subnet" {
 
 resource "aws_subnet" "db_subnet" {
   count = length (var.db_subnet)
-  vpc_id     = aws_vpc.vpc.id
+  vpc_id     = aws_vpc.main.id
   cidr_block = var.db_subnet.cidr[count.index]
   availability_zone = var.availability_zones[count.index]
 
@@ -54,7 +54,7 @@ resource "aws_subnet" "db_subnet" {
 
 ## Internet Gateway for public
 resource "aws_internet_gateway" "internet_gw" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.main.id
 
   tags = {
     Name = "${var.env}-igw"
@@ -78,7 +78,7 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 ## Route Table
 resource "aws_route_table" "public-rt" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -96,7 +96,7 @@ resource "aws_route_table" "public-rt" {
 }
 
 resource "aws_route_table" "web-rt" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -113,7 +113,7 @@ resource "aws_route_table" "web-rt" {
 }
 
 resource "aws_route_table" "app-rt" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -130,7 +130,7 @@ resource "aws_route_table" "app-rt" {
 }
 
 resource "aws_route_table" "db-rt" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -172,13 +172,13 @@ resource "aws_route_table_association" "db" {
 }
 
 resource "aws_vpc_peering_connection" "vpc_peering" {
-  peer_vpc_id   = aws_vpc.vpc.id
+  peer_vpc_id   = aws_vpc.main.id
   vpc_id        = var.default_vpc_id
   auto_accept   = true
 }
 
 resource "aws_route_table" "vpc_peering_route" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.main.id
 
   route {
     route_table_id            = var.default_vpc_rt
