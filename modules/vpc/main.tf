@@ -85,6 +85,11 @@ resource "aws_route_table" "public-rt" {
     gateway_id = aws_internet_gateway.internet_gw.id
   }
 
+  route {
+    cidr_block                = var.default_vpc_cidr
+    vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
+  }
+
    tags = {
     Name = "public-rt-${split("-", var.availability_zones[count.index])[2]}"
   }
@@ -98,6 +103,10 @@ resource "aws_route_table" "web-rt" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id
   }
 
+  route {
+    cidr_block                = var.default_vpc_cidr
+    vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
+  }
   tags = {
     Name = "web-rt-${split("-", var.availability_zones[count.index])[2]}"
   }
@@ -111,6 +120,10 @@ resource "aws_route_table" "app-rt" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id
   }
 
+  route {
+    cidr_block                = var.default_vpc_cidr
+    vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
+  }
   tags = {
     Name = "app-rt-${split("-", var.availability_zones[count.index])[2]}"
   }
@@ -124,6 +137,10 @@ resource "aws_route_table" "db-rt" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id
   }
 
+  route {
+    cidr_block                = var.default_vpc_cidr
+    vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
+  }
   tags = {
     Name = "db-rt-${split("-", var.availability_zones[count.index])[2]}"
   }
@@ -152,4 +169,23 @@ resource "aws_route_table_association" "db" {
   count          = length(var.db_subnet)
   subnet_id      = aws_subnet.db_subnet.*.id[count.index]
   route_table_id = aws_route_table.db-rt.*.id[count.index]
+}
+
+resource "aws_vpc_peering_connection" "vpc_peering" {
+  peer_vpc_id   = aws_vpc.vpc.id
+  vpc_id        = var.default_vpc_id
+  auto_accept   = true
+}
+
+resource "aws_route_table" "vpc_peering_route" {
+  vpc_id = aws_vpc.vpc.id
+
+  route {
+    route_table_id            = var.default_vpc_rt
+    destination_cidr_block    = var.cidr
+    vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
+  }
+  tags = {
+    Name = "vpc_peering_route"
+  }
 }
