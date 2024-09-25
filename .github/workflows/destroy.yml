@@ -1,0 +1,10 @@
+name: Removal Roboshop Infrastructure
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [workflow_dispatch]
+jobs:
+  Dev:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
