@@ -66,7 +66,7 @@ resource "aws_eip" "ngw_ip" {
   count       = length(var.availability_zones)
   domain      = "vpc"
 }
-resource "aws_nat_gateway" "nat_gateway" {
+resource "aws_nat_gateway" "main" {
   count           = length(var.availability_zones)
   allocation_id   = aws_eip.ngw_ip.*.id[count.index]
   subnet_id       = aws_subnet.public_subnet.*.id[count.index]
@@ -102,7 +102,7 @@ resource "aws_route_table" "web-rt" {
 
   route {
     cidr_block        = "0.0.0.0/0"
-    nat_gateway_id    = aws_nat_gateway.nat_gateway.*.id
+    nat_gateway_id    = aws_nat_gateway.main.*.id[count.index]
   }
 
   route {
@@ -120,7 +120,7 @@ resource "aws_route_table" "app-rt" {
 
   route {
     cidr_block        = "0.0.0.0/0"
-    nat_gateway_id    = aws_nat_gateway.nat_gateway.*.id
+    nat_gateway_id    = aws_nat_gateway.main.*.id[count.index]
   }
 
   route {
@@ -138,7 +138,7 @@ resource "aws_route_table" "db-rt" {
 
   route {
     cidr_block        = "0.0.0.0/0"
-    nat_gateway_id    = aws_nat_gateway.nat_gateway.*.id
+    nat_gateway_id    = aws_nat_gateway.main.*.id[count.index]
   }
 
   route {
