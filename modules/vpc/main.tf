@@ -9,10 +9,10 @@ resource "aws_vpc" "main" {
 
 ## SUBNETS
 resource "aws_subnet" "public_subnet" {
-  count = length (var.public_subnets)
-  vpc_id     = aws_vpc.main.id
-  cidr_block = var.public_subnets.cidr[count.index]
-  availability_zone = var.availability_zones[count.index]
+  count               = length (var.public_subnets)
+  vpc_id              = aws_vpc.main.id
+  cidr_block          = var.public_subnets[count.index]
+  availability_zone   = var.availability_zones[count.index]
 
   tags = {
     Name = "public_subnet-${split("-", var.availability_zones[count.index])[2]}"
@@ -31,10 +31,10 @@ resource "aws_subnet" "web_subnet" {
 }
 
 resource "aws_subnet" "app_subnet" {
-  count = length (var.app_subnets)
-  vpc_id     = aws_vpc.main.id
-  cidr_block = var.app_subnets.cidr[count.index]
-  availability_zone = var.availability_zones[count.index]
+  count               = length (var.app_subnets)
+  vpc_id              = aws_vpc.main.id
+  cidr_block          = var.app_subnets[count.index]
+  availability_zone   = var.availability_zones[count.index]
 
   tags = {
     Name = "app_subnet-${split("-", var.availability_zones[count.index])[2]}"
@@ -44,7 +44,7 @@ resource "aws_subnet" "app_subnet" {
 resource "aws_subnet" "db_subnet" {
   count = length (var.db_subnets)
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.db_subnets.cidr[count.index]
+  cidr_block = var.db_subnets[count.index]
   availability_zone = var.availability_zones[count.index]
 
   tags = {
