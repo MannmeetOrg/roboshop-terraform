@@ -78,6 +78,7 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 ## Route Table
 resource "aws_route_table" "public-rt" {
+  count  = length(var.public_subnet)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -96,6 +97,7 @@ resource "aws_route_table" "public-rt" {
 }
 
 resource "aws_route_table" "web-rt" {
+  count  = length(var.web_subnet)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -113,6 +115,7 @@ resource "aws_route_table" "web-rt" {
 }
 
 resource "aws_route_table" "app-rt" {
+  count  = length(var.app_subnet)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -130,6 +133,7 @@ resource "aws_route_table" "app-rt" {
 }
 
 resource "aws_route_table" "db-rt" {
+  count  = length(var.db_subnet)
   vpc_id = aws_vpc.main.id
 
   route {
