@@ -9,9 +9,9 @@ resource "aws_vpc" "main" {
 
 ## SUBNETS
 resource "aws_subnet" "public_subnet" {
-  count = length (var.public_subnet)
+  count = length (var.public_subnets)
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.public_subnet.cidr[count.index]
+  cidr_block = var.public_subnets.cidr[count.index]
   availability_zone = var.availability_zones[count.index]
 
   tags = {
@@ -20,9 +20,9 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "web_subnet" {
-  count                 = length(var.web_subnet)
+  count                 = length(var.web_subnets)
   vpc_id                = aws_vpc.main.id
-  cidr_block            = var.web_subnet[count.index]
+  cidr_block            = var.web_subnets[count.index]
   availability_zone     = var.availability_zones[count.index]
 
   tags = {
@@ -31,9 +31,9 @@ resource "aws_subnet" "web_subnet" {
 }
 
 resource "aws_subnet" "app_subnet" {
-  count = length (var.app_subnet)
+  count = length (var.app_subnets)
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.app_subnet.cidr[count.index]
+  cidr_block = var.app_subnets.cidr[count.index]
   availability_zone = var.availability_zones[count.index]
 
   tags = {
@@ -42,9 +42,9 @@ resource "aws_subnet" "app_subnet" {
 }
 
 resource "aws_subnet" "db_subnet" {
-  count = length (var.db_subnet)
+  count = length (var.db_subnets)
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.db_subnet.cidr[count.index]
+  cidr_block = var.db_subnets.cidr[count.index]
   availability_zone = var.availability_zones[count.index]
 
   tags = {
@@ -78,7 +78,7 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 ## Route Table
 resource "aws_route_table" "public-rt" {
-  count  = length(var.public_subnet)
+  count  = length(var.public_subnets)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -97,7 +97,7 @@ resource "aws_route_table" "public-rt" {
 }
 
 resource "aws_route_table" "web-rt" {
-  count  = length(var.web_subnet)
+  count  = length(var.web_subnets)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -115,7 +115,7 @@ resource "aws_route_table" "web-rt" {
 }
 
 resource "aws_route_table" "app-rt" {
-  count  = length(var.app_subnet)
+  count  = length(var.app_subnets)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -133,7 +133,7 @@ resource "aws_route_table" "app-rt" {
 }
 
 resource "aws_route_table" "db-rt" {
-  count  = length(var.db_subnet)
+  count  = length(var.db_subnets)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -152,25 +152,25 @@ resource "aws_route_table" "db-rt" {
 
 ## Route Table Association
 resource "aws_route_table_association" "public" {
-  count          = length(var.public_subnet)
+  count          = length(var.public_subnets)
   subnet_id      = aws_subnet.public_subnet.*.id[count.index]
   route_table_id = aws_route_table.public-rt.*.id[count.index]
 }
 
 resource "aws_route_table_association" "web" {
-  count          = length(var.web_subnet)
+  count          = length(var.web_subnets)
   subnet_id      = aws_subnet.web_subnet.*.id[count.index]
   route_table_id = aws_route_table.web-rt.*.id[count.index]
 }
 
 resource "aws_route_table_association" "app" {
-  count          = length(var.app_subnet)
+  count          = length(var.app_subnets)
   subnet_id      = aws_subnet.app_subnet.*.id[count.index]
   route_table_id = aws_route_table.app-rt.*.id[count.index]
 }
 
 resource "aws_route_table_association" "db" {
-  count          = length(var.db_subnet)
+  count          = length(var.db_subnets)
   subnet_id      = aws_subnet.db_subnet.*.id[count.index]
   route_table_id = aws_route_table.db-rt.*.id[count.index]
 }
