@@ -1,9 +1,9 @@
-variable "env" {}
 variable "cidr" {}
-variable public_subnet {}
-variable web_subnet {}
-variable app_subnet {}
-variable db_subnet {}
+variable "env" {}
+variable "public_subnets" {}
+variable "web_subnets" {}
+variable "app_subnets" {}
+variable "db_subnets" {}
 variable "availability_zones" {}
 variable "default_vpc_id" {}
 variable "default_vpc_rt" {}
