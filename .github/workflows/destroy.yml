@@ -7,6 +7,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Terraform init
-        run: terraform init backend-config=env-dev/state.tfvars
+        run: terraform init -backend-config=env-dev/state.tfvars
       - name: Terraform Destroy
         run: terraform destroy -var-file=env-dev/main.tfvars -auto-approve
