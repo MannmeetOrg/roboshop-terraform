@@ -171,21 +171,15 @@ resource "aws_route_table_association" "db" {
   route_table_id = aws_route_table.db-rt.*.id[count.index]
 }
 
+## Peering
 resource "aws_vpc_peering_connection" "vpc_peering" {
   peer_vpc_id   = aws_vpc.main.id
   vpc_id        = var.default_vpc_id
   auto_accept   = true
 }
 
-resource "aws_route_table" "vpc_peering_route" {
-  vpc_id = aws_vpc.main.id
-
-  route {
-    route_table_id            = var.default_vpc_rt
-    destination_cidr_block    = var.cidr
-    vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
-  }
-  tags = {
-    Name = "vpc_peering_route"
-  }
+resource "aws_route" "default-vpc-peer-route" {
+  route_table_id            = var.default_vpc_rt
+  destination_cidr_block    = var.cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
 }
