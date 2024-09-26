@@ -9,7 +9,7 @@ resource "aws_vpc" "main" {
 
 ## SUBNETS
 resource "aws_subnet" "public_subnet" {
-  count               = length (var.public_subnets)
+  count               = length(var.public_subnets)
   vpc_id              = aws_vpc.main.id
   cidr_block          = var.public_subnets[count.index]
   availability_zone   = var.availability_zones[count.index]
@@ -31,7 +31,7 @@ resource "aws_subnet" "web_subnet" {
 }
 
 resource "aws_subnet" "app_subnet" {
-  count               = length (var.app_subnets)
+  count               = length(var.app_subnets)
   vpc_id              = aws_vpc.main.id
   cidr_block          = var.app_subnets[count.index]
   availability_zone   = var.availability_zones[count.index]
@@ -42,10 +42,10 @@ resource "aws_subnet" "app_subnet" {
 }
 
 resource "aws_subnet" "db_subnet" {
-  count = length (var.db_subnets)
-  vpc_id     = aws_vpc.main.id
-  cidr_block = var.db_subnets[count.index]
-  availability_zone = var.availability_zones[count.index]
+  count               = length(var.db_subnets)
+  vpc_id              = aws_vpc.main.id
+  cidr_block          = var.db_subnets[count.index]
+  availability_zone   = var.availability_zones[count.index]
 
   tags = {
     Name = "db_subnet-${split("-", var.availability_zones[count.index])[2]}"
@@ -54,7 +54,7 @@ resource "aws_subnet" "db_subnet" {
 
 ## Internet Gateway for public
 resource "aws_internet_gateway" "internet_gw" {
-  vpc_id = aws_vpc.main.id
+  vpc_id  = aws_vpc.main.id
 
   tags = {
     Name = "${var.env}-igw"
@@ -63,13 +63,13 @@ resource "aws_internet_gateway" "internet_gw" {
 
 ## NAT-GATEWAY
 resource "aws_eip" "ngw_ip" {
-  count = length(var.availability_zones)
-  domain   = "vpc"
+  count       = length(var.availability_zones)
+  domain      = "vpc"
 }
 resource "aws_nat_gateway" "nat_gateway" {
-  count = length(var.availability_zones)
-  allocation_id = aws_eip.ngw_ip.*.id[count.index]
-  subnet_id     = aws_subnet.public_subnet.*.id[count.index]
+  count           = length(var.availability_zones)
+  allocation_id   = aws_eip.ngw_ip.*.id[count.index]
+  subnet_id       = aws_subnet.public_subnet.*.id[count.index]
 
   tags = {
     Name = "nat_gateway-${split("-", var.availability_zones[count.index])[2]}"
@@ -78,8 +78,8 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 ## Route Table
 resource "aws_route_table" "public-rt" {
-  count  = length(var.public_subnets)
-  vpc_id = aws_vpc.main.id
+  count     = length(var.public_subnets)
+  vpc_id    = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -97,12 +97,12 @@ resource "aws_route_table" "public-rt" {
 }
 
 resource "aws_route_table" "web-rt" {
-  count  = length(var.web_subnets)
-  vpc_id = aws_vpc.main.id
+  count       = length(var.web_subnets)
+  vpc_id      = aws_vpc.main.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.*.id
+    cidr_block        = "0.0.0.0/0"
+    nat_gateway_id    = aws_nat_gateway.nat_gateway.*.id
   }
 
   route {
@@ -115,12 +115,12 @@ resource "aws_route_table" "web-rt" {
 }
 
 resource "aws_route_table" "app-rt" {
-  count  = length(var.app_subnets)
-  vpc_id = aws_vpc.main.id
+  count       = length(var.app_subnets)
+  vpc_id      = aws_vpc.main.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.*.id
+    cidr_block        = "0.0.0.0/0"
+    nat_gateway_id    = aws_nat_gateway.nat_gateway.*.id
   }
 
   route {
@@ -133,12 +133,12 @@ resource "aws_route_table" "app-rt" {
 }
 
 resource "aws_route_table" "db-rt" {
-  count  = length(var.db_subnets)
-  vpc_id = aws_vpc.main.id
+  count     = length(var.db_subnets)
+  vpc_id    = aws_vpc.main.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.*.id
+    cidr_block        = "0.0.0.0/0"
+    nat_gateway_id    = aws_nat_gateway.nat_gateway.*.id
   }
 
   route {
