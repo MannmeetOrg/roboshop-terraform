@@ -15,7 +15,7 @@ resource "aws_subnet" "public_subnet" {
   availability_zone   = var.availability_zones[count.index]
 
   tags = {
-    Name = "public_subnet"-${split("-", var.availability_zones[count.index])[2]}"
+    Name = "public_subnet-${split("-", var.availability_zones[count.index])[2]}"
   }
 }
 
