@@ -8,8 +8,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Terraform init
         run: terraform init -backend-config=env-dev/state.tfvars
-      - name: Terraform Apply
-        run: terraform apply -var-file=env-dev/main.tfvars -auto-approve
+#      - name: Terraform Apply
+#        run: terraform apply -var-file=env-dev/main.tfvars -auto-approve
 #  QA:
 #    needs: dev
 #    runs-on: ubuntu-latest
