@@ -11,7 +11,6 @@ vpc = {
   default_vpc_id      = "vpc-027bb446dd3568149"
   default_vpc_rt      = "rtb-00238bf7822dd79e2"
   default_vpc_cidr    = "172.31.0.0/16"
-
 }
 
 # ec2 = {
