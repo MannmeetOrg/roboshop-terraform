@@ -1,5 +1,5 @@
 env                   = "dev"
-
+bastion_nodes         = "172.31.86.118/24"
 
 vpc = {
   cidr                = "10.10.0.0/16"
@@ -13,7 +13,15 @@ vpc = {
   default_vpc_cidr    = "172.31.0.0/16"
 }
 
-# ec2 = {
-#   ami           = "ami-066784287e358dad1"
-#   instance_type = "t2.micro"
-# }
+apps = {
+
+  instance_type = "t3.small"
+  subnet_ref    = "web"
+  allow_port    = ["10.10.0.0/24", "10.10.1.0/24" ]
+  allow_sg_cidr = ["0.0.0.0/0"]
+#   capacity {
+#       desired = 1
+#           Max = 1
+#           Min = 1
+#   }
+}

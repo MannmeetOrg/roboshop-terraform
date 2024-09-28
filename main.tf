@@ -14,9 +14,16 @@ module "vpc" {
   default_vpc_cidr     = var.vpc["default_vpc_cidr"]
 }
 
-# module "ec2" {
-#   source = "./modules/ec2"
-#   ami                  = var.ami
-#   instance_type        = var.instance_type
-#   env                  = var.env
-# }
+module "apps" {
+  source = "./modules/ec2"
+
+  for_each              = var.apps
+  name                  = each.key
+  instance_type         = var.instance_type
+  env                   = var.env
+  vpc_id                = module.vpc.vpc_id
+  allow_port            = var.allow_ports
+  allow_sg_cidr         = var.allow_sg_cidr
+  subnet_ids            = module.vpc.subnets[each.value["subnet_ref"]]
+
+}
