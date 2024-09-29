@@ -26,4 +26,5 @@ module "apps" {
   allow_sg_cidr         = var.allow_sg_cidr
   subnet_ids            = module.vpc.subnets[each.value["subnet_ref"]]
   bastion_nodes         = var.bastion_nodes
+  ami                   = "ami-0ebfd941bbafe70c6"
 }
