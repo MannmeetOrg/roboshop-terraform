@@ -2,7 +2,16 @@ name: Provision Roboshop Infrastructure
 #run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [workflow_dispatch]
 jobs:
-  Dev:
+#  Dev-Plan:
+#    runs-on: self-hosted
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Terraform init
+#        run: terraform init -backend-config=env-dev/state.tfvars
+#      - name: Terraform Apply
+#        run: terraform apply -var-file=env-dev/main.tfvars -auto-approve
+
+  Dev-apply:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
